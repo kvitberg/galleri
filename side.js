@@ -85,12 +85,18 @@
     bunn.innerHTML = d.modus === "valg"
       ? `<span class="teller">${n} valgt</span><textarea id="kommentar" rows="1" placeholder="Noe vi bør vite?" aria-label="Noe vi bør vite?">${esc(t.kommentar)}</textarea><button type="button" class="hoved" id="sendValg">Send valget</button>`
       : `<span class="teller">${n} valgt</span>${d.zip ? `<button type="button" class="ghost" id="lastAlle">Last ned alle</button>` : ""}<button type="button" class="hoved" id="lastValgte">Last ned valgte (${n})</button>`;
+    plassTilBunn();
   }
   function oppdaterBunn() {
     const n = t.valgt.size;
     $(".teller").textContent = `${n} valgt`;
     const k = $("#lastValgte");
     if (k) k.textContent = `Last ned valgte (${n})`;
+  }
+  // Bunnlinja ligger fast over innholdet og blir høyere når den brytes på smale skjermer: like mye luft under siste rad
+  function plassTilBunn() {
+    const bunn = $("#bunn");
+    document.body.style.paddingBottom = bunn.hidden ? "" : `${bunn.offsetHeight + 24}px`;
   }
 
   function visStor(i) {
@@ -212,6 +218,9 @@
     if (e.key === "ArrowLeft") visStor(t.apen - 1);
     if (e.key === "ArrowRight") visStor(t.apen + 1);
   });
+  window.addEventListener("resize", plassTilBunn);
+  // Også når linja endrer høyde av seg selv: skriften lastes, teksten endres eller kommentarfeltet dras større
+  if (window.ResizeObserver) new ResizeObserver(plassTilBunn).observe($("#bunn"));
   $("#viser").addEventListener("touchstart", (e) => { t.x0 = e.touches[0].clientX; }, { passive: true });
   $("#viser").addEventListener("touchend", (e) => {
     if (t.x0 === null) return;
