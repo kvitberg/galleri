@@ -16,15 +16,16 @@
     clearTimeout(m._t);
     m._t = setTimeout(() => (m.className = "melding"), 6000);
   }
-  async function hentJson(url) {
-    const r = await fetch(url);
-    if (!r.ok) throw new Error("Fikk ikke kontakt.");
-    return r.json();
+  const KONTAKT = "Fikk ikke kontakt. Prøv igjen.";
+  // Nettverks-, HTTP- og JSON-feil blir alltid én fast norsk tekst, aldri nettleserens egen
+  async function hentJson(url, valg) {
+    try {
+      const r = await fetch(url, valg);
+      if (!r.ok) throw new Error();
+      return await r.json();
+    } catch (e) { throw new Error(KONTAKT); }
   }
-  async function postJson(data) {
-    const r = await fetch(TJENESTE, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
-    return r.json();
-  }
+  const postJson = (data) => hentJson(TJENESTE, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
   const demoBilde = (rom, nr) => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="600" height="400" fill="#ece6dc"/><text x="24" y="372" font-family="monospace" font-size="28" fill="#5c5054">${rom} · ${nr}</text></svg>`);
 
   async function last() {
@@ -65,7 +66,8 @@
         + `<figcaption><span class="stjerner" aria-label="${b.stjerner || 0} av 5 stjerner">${L.stjerner(b.stjerner)}</span><span>${esc(b.rom)}${valg && b.antall > 1 ? ` · ${b.antall} bilder` : ""}</span></figcaption></figure>`;
     };
     $("#innhold").innerHTML =
-      `<header class="topp"><h1>${esc(d.tittel)}</h1><p>${esc(d.fotograf.navn)} · ${esc(L.datoTekst(d.dato))} · ${esc(L.antallTekst(d.bilder.length, d.modus))}</p>`
+      `<div class="meta">Fotostallen · ${valg ? "Valg av bilder" : "Bildeleveranse"}</div>`
+      + `<header class="topp"><div class="kicker">(01) — ${valg ? "Velg bilder" : "Bildene"}</div><h1>${esc(d.tittel)}</h1><p>${esc(d.fotograf.navn)} · ${esc(L.datoTekst(d.dato))} · ${esc(L.antallTekst(d.bilder.length, d.modus))}</p>`
       + (valg ? `<p class="hjelp">Kryss av vinklene du vil ha redigert, og trykk «Send valget» nederst.</p>` : "") + `</header>`
       + `<nav class="verktoy" aria-label="Sortering og filter"><span class="l">Vis</span>${knapp("data-vis", "tatt", "Rekkefølge tatt", t.visning === "tatt")}${knapp("data-vis", "rom", "Etter rom", t.visning === "rom")}`
       + `<span class="l">Stjerner</span>${[[0, "Alle"], [3, "3★ og opp"], [4, "4★ og opp"], [5, "5★"]].map(([k, x]) => knapp("data-min", k, x, t.min === k)).join("")}`
@@ -82,7 +84,7 @@
     bunn.hidden = false;
     bunn.innerHTML = d.modus === "valg"
       ? `<span class="teller">${n} valgt</span><textarea id="kommentar" rows="1" placeholder="Noe vi bør vite?" aria-label="Noe vi bør vite?">${esc(t.kommentar)}</textarea><button type="button" class="hoved" id="sendValg">Send valget</button>`
-      : `<span class="teller">${n} valgt</span>${d.zip ? `<button type="button" id="lastAlle">Last ned alle</button>` : ""}<button type="button" class="hoved" id="lastValgte">Last ned valgte (${n})</button>`;
+      : `<span class="teller">${n} valgt</span>${d.zip ? `<button type="button" class="ghost" id="lastAlle">Last ned alle</button>` : ""}<button type="button" class="hoved" id="lastValgte">Last ned valgte (${n})</button>`;
   }
   function oppdaterBunn() {
     const n = t.valgt.size;
@@ -171,7 +173,7 @@
       melding(`Takk! Valget er sendt (${L.antallTekst(r.antall, "valg")}). Du får en kvittering på mail.`);
       knapp.textContent = "Send valget på nytt";
     } catch (e) {
-      melding(e.message === "Failed to fetch" ? "Fikk ikke kontakt. Prøv igjen." : e.message, true);
+      melding(e.message, true);
       knapp.textContent = "Send valget";
     } finally { t.sender = false; }
   }
