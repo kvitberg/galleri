@@ -1,0 +1,17 @@
+{
+  "ok": true, "stengt": false, "id": "demo-nedlasting", "modus": "nedlasting", "tittel": "Eksempelveien 1",
+  "fotograf": { "navn": "Fotograf", "epost": "post@fotostallen.no" }, "dato": "2026-11-13", "zip": "#",
+  "romRekkefolge": ["Stue", "Spisestue", "Kjøkken", "Sov 1", "Sov 2", "Sov 3", "Sov 4", "Sov 5", "Sov 6", "Bad", "Bad 2", "Bad 3", "WC", "Vaskerom", "Kontor", "Gang", "Trapp", "Bod", "Balkong", "Ute", "Fellesareal", "Detaljer", "Annet"],
+  "bilder": [
+    { "nr": 1, "rom": "Gang", "stjerner": 2, "url": "demo:", "antall": 1, "navn": "bilde-01.jpg" },
+    { "nr": 2, "rom": "Stue", "stjerner": 5, "url": "demo:", "antall": 1, "navn": "bilde-02.jpg" },
+    { "nr": 3, "rom": "Stue", "stjerner": 4, "url": "demo:", "antall": 1, "navn": "bilde-03.jpg" },
+    { "nr": 4, "rom": "Stue", "stjerner": 3, "url": "demo:", "antall": 1, "navn": "bilde-04.jpg" },
+    { "nr": 5, "rom": "Kjøkken", "stjerner": 5, "url": "demo:", "antall": 1, "navn": "bilde-05.jpg" },
+    { "nr": 6, "rom": "Kjøkken", "stjerner": 4, "url": "demo:", "antall": 1, "navn": "bilde-06.jpg" },
+    { "nr": 7, "rom": "Sov 1", "stjerner": 4, "url": "demo:", "antall": 1, "navn": "bilde-07.jpg" },
+    { "nr": 8, "rom": "Sov 2", "stjerner": 3, "url": "demo:", "antall": 1, "navn": "bilde-08.jpg" },
+    { "nr": 9, "rom": "Bad", "stjerner": 3, "url": "demo:", "antall": 1, "navn": "bilde-09.jpg" },
+    { "nr": 10, "rom": "Ute", "stjerner": 5, "url": "demo:", "antall": 1, "navn": "bilde-10.jpg" }
+  ]
+}
