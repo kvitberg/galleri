@@ -1,7 +1,7 @@
 // Galleriet kunden ser. Henter alt fra galleritjenesten og har ingen hemmeligheter.
 (function () {
   "use strict";
-  const TJENESTE = ""; // tjenestens /exec-adresse, settes når tjenesten er distribuert
+  const TJENESTE = "https://script.google.com/macros/s/AKfycbwR1wEZXCrL3Uyp8v6jB30wtlxeDqT9lpK6QrncJKyG3a0SzqPqm7T0bkjOsYPN1Plc/exec"; // galleritjenestens /exec-adresse
   const L = window.GalleriLogikk;
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
