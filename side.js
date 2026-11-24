@@ -56,21 +56,21 @@
   const synlige = () => L.sorter(L.filtrer(t.data.bilder, { min: t.min, rom: t.rom }), t.visning, t.data.romRekkefolge);
 
   function tegn() {
-    const d = t.data, valg = d.modus === "valg", vis = synlige();
+    const d = t.data, valg = d.modus === "valg", vis = synlige(), stjerner = L.harStjerner(d.bilder);
     const knapp = (attr, verdi, tekst, paa) => `<button type="button" class="chip" ${attr}="${esc(verdi)}" aria-pressed="${paa}">${esc(tekst)}</button>`;
     const flis = (b) => {
       const paa = t.valgt.has(b.nr);
       return `<figure class="flis${paa ? " valgt" : ""}">`
         + `<button type="button" class="aapne" data-i="${vis.indexOf(b)}" aria-label="Vis bilde ${b.nr} stort"><img src="${esc(b.url)}" alt="${esc(b.rom)}, bilde ${b.nr}" loading="lazy"></button>`
         + `<label class="kryss"><input type="checkbox" data-nr="${b.nr}"${paa ? " checked" : ""}><span>${valg ? "Rediger dette" : "Velg"}</span></label>`
-        + `<figcaption><span class="stjerner" aria-label="${b.stjerner || 0} av 5 stjerner">${L.stjerner(b.stjerner)}</span><span>${esc(b.rom)}${valg && b.antall > 1 ? ` · ${b.antall} bilder` : ""}</span></figcaption></figure>`;
+        + `<figcaption>${stjerner ? `<span class="stjerner" aria-label="${b.stjerner || 0} av 5 stjerner">${L.stjerner(b.stjerner)}</span>` : ""}<span>${esc(b.rom)}${valg && b.antall > 1 ? ` · ${b.antall} bilder` : ""}</span></figcaption></figure>`;
     };
     $("#innhold").innerHTML =
       `<div class="meta">Fotostallen · ${valg ? "Valg av bilder" : "Bildeleveranse"}</div>`
       + `<header class="topp"><div class="kicker">(01) — ${valg ? "Velg bilder" : "Bildene"}</div><h1>${esc(d.tittel)}</h1><p>${esc(d.fotograf.navn)} · ${esc(L.datoTekst(d.dato))} · ${esc(L.antallTekst(d.bilder.length, d.modus))}</p>`
       + (valg ? `<p class="hjelp">Kryss av vinklene du vil ha redigert, og trykk «Send valget» nederst.</p>` : "") + `</header>`
       + `<nav class="verktoy" aria-label="Sortering og filter"><span class="l">Vis</span>${knapp("data-vis", "tatt", "Rekkefølge tatt", t.visning === "tatt")}${knapp("data-vis", "rom", "Etter rom", t.visning === "rom")}`
-      + `<span class="l">Stjerner</span>${[[0, "Alle"], [3, "3★ og opp"], [4, "4★ og opp"], [5, "5★"]].map(([k, x]) => knapp("data-min", k, x, t.min === k)).join("")}`
+      + (stjerner ? `<span class="l">Stjerner</span>${[[0, "Alle"], [3, "3★ og opp"], [4, "4★ og opp"], [5, "5★"]].map(([k, x]) => knapp("data-min", k, x, t.min === k)).join("")}` : "")
       + `<span class="l">Rom</span>${knapp("data-rom", "", "Alle", !t.rom)}${L.romTelling(d.bilder, d.romRekkefolge).map((r) => knapp("data-rom", r.rom, `${r.rom} (${r.antall})`, t.rom === r.rom)).join("")}</nav>`
       + `<div id="lenker"></div>`
       + (vis.length
@@ -106,7 +106,7 @@
     const b = vis[i], v = $("#viser");
     v.innerHTML = `<button type="button" class="lukk" aria-label="Lukk">×</button><button type="button" class="pil forrige" aria-label="Forrige bilde">‹</button>`
       + `<img src="${esc(b.url)}" alt="${esc(b.rom)}, bilde ${b.nr}"><button type="button" class="pil neste" aria-label="Neste bilde">›</button>`
-      + `<div class="viser-tekst"><span class="stjerner">${L.stjerner(b.stjerner)}</span> ${esc(b.rom)} · ${i + 1} av ${vis.length}</div>`;
+      + `<div class="viser-tekst">${L.harStjerner(t.data.bilder) ? `<span class="stjerner">${L.stjerner(b.stjerner)}</span> ` : ""}${esc(b.rom)} · ${i + 1} av ${vis.length}</div>`;
     v.hidden = false;
     document.body.classList.add("laast");
     v.querySelector(".lukk").focus();

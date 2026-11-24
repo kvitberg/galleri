@@ -22,6 +22,7 @@
       return L.romTelling(bilder, rekkefolge).map((r) => ({ rom: r.rom, bilder: bilder.filter((b) => b.rom === r.rom) }));
     },
     stjerner(n) { return n ? "★".repeat(n) + "☆".repeat(5 - n) : ""; },
+    harStjerner(bilder) { return (bilder || []).some((b) => b.stjerner > 0); },
     antallTekst(n, modus) { return modus === "valg" ? `${n} ${n === 1 ? "vinkel" : "vinkler"}` : `${n} ${n === 1 ? "bilde" : "bilder"}`; },
     datoTekst(iso) {
       const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);

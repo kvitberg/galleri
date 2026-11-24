@@ -42,3 +42,9 @@ test("tekster", () => {
   assert.strictEqual(L.zipNavn('a/b:c*?"<>|'), "abc.zip");
   assert.strictEqual(L.zipNavn(""), "bilder.zip");
 });
+
+test("harStjerner er sann bare når minst ett bilde har stjerner", () => {
+  assert.ok(L.harStjerner(B));
+  assert.ok(!L.harStjerner([{ stjerner: 0 }, { stjerner: null }, {}]));
+  assert.ok(!L.harStjerner([]));
+});
